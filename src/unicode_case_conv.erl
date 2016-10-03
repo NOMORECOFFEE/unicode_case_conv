@@ -22,15 +22,15 @@ ex1() ->
 
 do_downcase(Forms, _Opts) ->
     Codes = ct_expand:term(
-        [{Codepoint, byte_size(Codepoint), Lower} || {Codepoint, Lower, _, _} <- load_special_casing(), Codepoint =/= Lower]
+        [{Codepoint, Lower} || {<<Codepoint/utf8>>, Lower, _, _} <- load_special_casing(), Codepoint =/= Lower]
     ),
     NewF =
         codegen:gen_function(
             downcase,
-            [ fun(<<S:({'$var', Size})/binary, Rest/binary>>, AccIn) when S == {'$var', CodePoint} ->
+            [ fun(<<{'$var', CodePoint}/utf8, Rest/binary>>, AccIn) ->
                 Lower = {'$var', Lower},
                 downcase(Rest, <<AccIn/binary, Lower/binary>>)
-              end || {CodePoint, Size, Lower} <- Codes]),
+              end || {CodePoint, Lower} <- Codes]),
     parse_trans:replace_function(downcase, 2, NewF, Forms).
 
 load_special_casing() ->
