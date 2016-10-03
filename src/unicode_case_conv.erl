@@ -22,7 +22,7 @@ ex1() ->
 
 do_downcase(Forms, _Opts) ->
     Codes = ct_expand:term(
-        [{Codepoint, Lower} || {<<Codepoint/utf8>>, Lower, _, _} <- load_special_casing(), Codepoint =/= Lower]
+        [{Codepoint, Lower} || {S = <<Codepoint/utf8>>, Lower, _, _} <- load_special_casing(), S =/= Lower]
     ),
     NewF =
         codegen:gen_function(
