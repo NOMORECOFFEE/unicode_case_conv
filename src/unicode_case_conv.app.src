@@ -1,0 +1,7 @@
+{application, unicode_case_conv,
+  [{description, "Unicode Special Casing"},
+   {vsn, "0.0.1"},
+   {modules, []},
+   {registered, []},
+   {applications, [kernel, stdlib]}
+]}.
